@@ -1,8 +1,8 @@
-import { Modal, StyleSheet, Text, View, TouchableOpacity, Pressable, Alert } from 'react-native'
+import { Modal, Animated, Text, View, TouchableOpacity, Pressable, Alert, ActivityIndicator } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { LinearGradient } from 'expo-linear-gradient'
 import { Image } from 'react-native'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { AntDesign } from '@expo/vector-icons'
 import { Entypo } from '@expo/vector-icons'
 import Images from '../../assets/images'
@@ -10,19 +10,38 @@ import styles from './style'
 import ProgessBar from './ProgessBar'
 import { TestResultState, resetResults, updateTestResultField } from '../../store/testResultSlice'
 import { useDispatch, useSelector } from 'react-redux'
+import { LoadDataState, testDataType } from '../../store/testPageDataSlice'
 
 function Page2Test({ navigation }: { navigation: any }) {
+  const testPageData = useSelector((state: LoadDataState) => state.testPageData)
+  const data = JSON.stringify(testPageData)
+  const parsedData = JSON.parse(data)
+
   const testResult = useSelector((state: { testResult: TestResultState }) => state.testResult)
+  const [step, setStep] = useState<number>(1) // current step
+
   const dispatch = useDispatch()
-  const [modalVisible, setModalVisible] = useState(false) // cho modal
-  const [activeIndex, setActiveIndex] = useState<number>() //cho 2 button được và không được
-  const [disabled, setDisabled] = useState(false) //ngăn chặn nhấn 2 lần
-  const [step, setStep] = useState(1)
   useEffect(() => {
     if (step === 1) {
       dispatch(resetResults())
     }
+    if (step != 5) {
+      setAnimatedOpacity(new Animated.Value(0))
+    }
   }, [step])
+  const [modalVisible, setModalVisible] = useState(false) // cho modal
+  const [activeIndex, setActiveIndex] = useState<number>() //cho 2 button được và không được
+  const [disabled, setDisabled] = useState(false) //ngăn chặn nhấn 2 lần
+  //fade in animation image
+  const [animatedOpacity, setAnimatedOpacity] = useState(new Animated.Value(0))
+
+  useEffect(() => {
+    Animated.timing(animatedOpacity, {
+      toValue: 1,
+      duration: 600,
+      useNativeDriver: true
+    }).start()
+  }, [step, animatedOpacity])
 
   // 0 chưa chọn 1 - đang chọn, 2 - được, 3 - không được, 4 - hình ảnh
   const changeStepValue = (x: number) => {
@@ -159,23 +178,18 @@ function Page2Test({ navigation }: { navigation: any }) {
             KIỂM TRA {step === 1 ? 'CƠ' : step === 2 ? 'XƯƠNG' : step === 3 ? 'KHỚP' : 'ĐỀ KHÁNG'}
           </Text>
           <View style={{ position: 'relative', width: '100%', height: '100%', borderRadius: 16, flex: 5 }}>
-            <Image
+            <Animated.Image
               style={{
                 width: '100%',
                 height: '100%',
                 borderRadius: 16,
                 borderColor: activeIndex === 1 ? '#73A442' : activeIndex === 2 ? '#C6463A' : undefined,
-                borderWidth: 3
+                borderWidth: 3,
+                opacity: animatedOpacity
               }}
-              source={
-                step === 1
-                  ? Images.imageCo
-                  : step === 2
-                  ? Images.imageXuong
-                  : step === 3
-                  ? Images.imageKhop
-                  : Images.imageDeKhang
-              }
+              source={{
+                uri: 'https://github.com/ndhuy2308/Anlene-TypeScript/raw/main/assets/images/test-' + step + '.png'
+              }}
             />
             <Image
               style={{
@@ -192,17 +206,7 @@ function Page2Test({ navigation }: { navigation: any }) {
           </View>
           <Text
             style={[styles.textTop, { textAlign: 'center', paddingTop: 10, paddingLeft: '10%', paddingRight: '10%' }]}
-          >
-            {step === 1
-              ? 'Thẳng lưng trước ghế, đứng lên ngồi xuống 5 lần từ 6-10 giây'
-              : step === 2
-              ? 'Duỗi 2 tay về phía trước, từ từ cúi xuống để chạm vào mũi bàn chân'
-              : step === 3
-              ? 'Đứng rộng chân, lưng thẳng đứng, tay đưa ra sau và đan vào nhau'
-              : step === 4
-              ? '6 tháng gần đây, bạn có gặp các triệu chứng: ho, sổ mũi, cảm sốt?'
-              : '6 tháng gần đây, bạn có gặp các triệu chứng: ho, sổ mũi, cảm sốt?'}
-          </Text>
+          ></Text>
 
           <View style={{ flex: 2 }}>
             <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', paddingTop: 15 }}>

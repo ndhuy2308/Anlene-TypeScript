@@ -4,8 +4,13 @@ import { LinearGradient } from 'expo-linear-gradient'
 import { AntDesign } from '@expo/vector-icons'
 import Images from '../../assets/images'
 import TextGradient from '../TextGradient'
+import LoadData from './loadTestPageData'
+import { useSelector } from 'react-redux'
+import { LoadDataState } from '../../store/testPageDataSlice'
+import { useEffect } from 'react'
 
 export default function HomePage({ navigation }: { navigation: any }) {
+  LoadData() // for page 2
   return (
     <View style={{ flex: 1 }}>
       <ImageBackground source={require('../../assets/images/page1.png')} style={{ flex: 1 }}>

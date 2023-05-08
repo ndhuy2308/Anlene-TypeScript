@@ -17,8 +17,9 @@ export default function ProgessBar({ ...props }: ProgressBarProps) {
   const step2 = props.step2
   const step3 = props.step3
   const step4 = props.step4
-  const [barWidth] = useState(new Animated.Value(0))
 
+  //line border
+  const [barWidth] = useState(new Animated.Value(0))
   useEffect(() => {
     let toValue
     if (step === 1) {
@@ -30,7 +31,6 @@ export default function ProgessBar({ ...props }: ProgressBarProps) {
     } else {
       toValue = 1
     }
-
     Animated.timing(barWidth, {
       toValue,
       duration: 600,
