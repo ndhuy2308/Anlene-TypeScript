@@ -18,17 +18,15 @@ function Page2Test({ navigation }: { navigation: any }) {
 
   //xử lí dữ liệu lấy từ firebase khi đã đưa vào redux
   const testPageData = useSelector((state: LoadDataState) => state.testPageData)
-  const parsedData = JSON.parse(JSON.stringify(testPageData));
-  const s = step <= 4 ? step - 1 : 3;//index start from 0
-  const content = parsedData.testPageData[s].Content; 
-  const title = parsedData.testPageData[s].Title; 
+  const parsedData = JSON.parse(JSON.stringify(testPageData))
+  const s = step <= 4 ? step - 1 : 3 //index start from 0
+  const content = parsedData.testPageData[s].Content
+  const title = parsedData.testPageData[s].Title
   const modalText = parsedData.testPageData[4].content
-  const imgSource = 'https://github.com/ndhuy2308/Anlene-TypeScript/raw/main/assets/images/test-' + (step <= 4 ? step : 4)  + '.png' 
-  console.log(content)
+  const imgSource =
+    'https://github.com/ndhuy2308/Anlene-TypeScript/raw/main/assets/images/test-' + (step <= 4 ? step : 4) + '.png'
   //
   const testResult = useSelector((state: { testResult: TestResultState }) => state.testResult)
-  
-  
 
   useEffect(() => {
     if (step === 1) {
@@ -95,7 +93,10 @@ function Page2Test({ navigation }: { navigation: any }) {
       >
         <View style={styles.modalView}>
           <Text style={{ color: '#478449', fontFamily: 'svnBold', fontSize: 22, paddingTop: 10 }}>CẢM ƠN</Text>
-          <Text numberOfLines={0} style={{ color: '#1D1C1C', textAlign: 'center', fontFamily: 'svnGotham', fontSize: 15, padding: 10 }}>
+          <Text
+            numberOfLines={0}
+            style={{ color: '#1D1C1C', textAlign: 'center', fontFamily: 'svnGotham', fontSize: 15, padding: 10 }}
+          >
             {modalText}
           </Text>
           <View style={{ flexDirection: 'row', padding: 10 }}>
@@ -214,7 +215,9 @@ function Page2Test({ navigation }: { navigation: any }) {
           </View>
           <Text
             style={[styles.textTop, { textAlign: 'center', paddingTop: 10, paddingLeft: '10%', paddingRight: '10%' }]}
-          >{content}</Text>
+          >
+            {content}
+          </Text>
 
           <View style={{ flex: 2 }}>
             <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', paddingTop: 15 }}>
