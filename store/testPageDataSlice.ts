@@ -2,8 +2,8 @@ import { createSlice } from '@reduxjs/toolkit'
 
 export interface testDataType {
   Title: string
-  Image: string
   Content: string
+  modalText: string
 }
 
 export interface LoadDataState {

@@ -2,13 +2,7 @@ import { getFirestore, getDocs, collection } from 'firebase/firestore'
 import firebaseapp from '../FirebaseConfig'
 import { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { setTestPage } from '../../store/testPageDataSlice'
-
-export interface testDataType {
-  Title: string
-  Image: string
-  Content: string
-}
+import { setTestPage, testDataType} from '../../store/testPageDataSlice'
 
 function LoadData() {
   const dispatch = useDispatch()

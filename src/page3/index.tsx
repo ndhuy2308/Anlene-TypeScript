@@ -18,7 +18,7 @@ import { LinearGradient } from 'expo-linear-gradient'
 import { useEffect, useState } from 'react'
 import { AntDesign } from '@expo/vector-icons'
 import { Entypo } from '@expo/vector-icons'
-import { getDatabase, ref, child, get, set } from 'firebase/database'
+import { getFirestore, collection, addDoc } from 'firebase/firestore'
 import firebaseapp from '../FirebaseConfig'
 import { useDispatch, useSelector } from 'react-redux'
 import { TestResultState, resetResults } from '../../store/testResultSlice'
@@ -79,29 +79,25 @@ function Page3Form({ navigation }: { navigation: any }) {
   }
 
   const submitHandlePress = (cancelTestResults: boolean) => {
-    const database = getDatabase(firebaseapp)
-    const date = new Date()
-    const id =
-      date.getFullYear().toString() +
-      (date.getMonth() + 1).toString().padStart(2, '0') +
-      date.getDate().toString().padStart(2, '0') +
-      date.getSeconds().toString().padStart(2, '0')
-    set(ref(database, 'results/' + id), {
-      name: Name,
-      PhoneNumber: Number,
-      Email: Email,
-      Co: !cancelTestResults ? testResult.Co : -1,
-      Xuong: !cancelTestResults ? testResult.Xuong : -1,
-      Khop: !cancelTestResults ? testResult.Khop : -1,
-      DeKhang: !cancelTestResults ? testResult.DeKhang : -1,
-      Follow: isChecked
-    })
-      .then(() => {
+    async function writeData() {
+      try {
+        const db = getFirestore(firebaseapp)
+        const docRef = await addDoc(collection(db, 'results'), {
+          name: Name,
+          PhoneNumber: Number,
+          Email: Email,
+          Co: !cancelTestResults ? testResult.Co : -1,
+          Xuong: !cancelTestResults ? testResult.Xuong : -1,
+          Khop: !cancelTestResults ? testResult.Khop : -1,
+          DeKhang: !cancelTestResults ? testResult.DeKhang : -1,
+          Follow: isChecked
+        })
         console.log('Data written successfully!')
-      })
-      .catch((error) => {
+      } catch (error: any) {
         console.error('Error writing data: ', error)
-      })
+      }
+    }
+    writeData()
     navigation.navigate('Page4')
   }
   return (

@@ -13,14 +13,23 @@ import { useDispatch, useSelector } from 'react-redux'
 import { LoadDataState, testDataType } from '../../store/testPageDataSlice'
 
 function Page2Test({ navigation }: { navigation: any }) {
-  const testPageData = useSelector((state: LoadDataState) => state.testPageData)
-  const data = JSON.stringify(testPageData)
-  const parsedData = JSON.parse(data)
-
-  const testResult = useSelector((state: { testResult: TestResultState }) => state.testResult)
+  const dispatch = useDispatch()
   const [step, setStep] = useState<number>(1) // current step
 
-  const dispatch = useDispatch()
+  //xử lí dữ liệu lấy từ firebase khi đã đưa vào redux
+  const testPageData = useSelector((state: LoadDataState) => state.testPageData)
+  const parsedData = JSON.parse(JSON.stringify(testPageData));
+  const s = step <= 4 ? step - 1 : 3;//index start from 0
+  const content = parsedData.testPageData[s].Content; 
+  const title = parsedData.testPageData[s].Title; 
+  const modalText = parsedData.testPageData[4].content
+  const imgSource = 'https://github.com/ndhuy2308/Anlene-TypeScript/raw/main/assets/images/test-' + (step <= 4 ? step : 4)  + '.png' 
+  console.log(content)
+  //
+  const testResult = useSelector((state: { testResult: TestResultState }) => state.testResult)
+  
+  
+
   useEffect(() => {
     if (step === 1) {
       dispatch(resetResults())
@@ -86,9 +95,8 @@ function Page2Test({ navigation }: { navigation: any }) {
       >
         <View style={styles.modalView}>
           <Text style={{ color: '#478449', fontFamily: 'svnBold', fontSize: 22, paddingTop: 10 }}>CẢM ƠN</Text>
-          <Text style={{ color: '#1D1C1C', textAlign: 'center', fontFamily: 'svnGotham', fontSize: 15, padding: 10 }}>
-            Bạn đã tham gia bài kiểm tra sức {'\n'}khoẻ Hãy tiếp tục để có thể nhận kết quả {'\n'}kiểm tra sức khoẻ của
-            bạn.
+          <Text numberOfLines={0} style={{ color: '#1D1C1C', textAlign: 'center', fontFamily: 'svnGotham', fontSize: 15, padding: 10 }}>
+            {modalText}
           </Text>
           <View style={{ flexDirection: 'row', padding: 10 }}>
             <TouchableOpacity
@@ -175,7 +183,7 @@ function Page2Test({ navigation }: { navigation: any }) {
             />
           </View>
           <Text style={{ color: '#E1D770', fontSize: 20, fontFamily: 'svnBold', alignSelf: 'center', padding: 5 }}>
-            KIỂM TRA {step === 1 ? 'CƠ' : step === 2 ? 'XƯƠNG' : step === 3 ? 'KHỚP' : 'ĐỀ KHÁNG'}
+            KIỂM TRA {title}
           </Text>
           <View style={{ position: 'relative', width: '100%', height: '100%', borderRadius: 16, flex: 5 }}>
             <Animated.Image
@@ -188,7 +196,7 @@ function Page2Test({ navigation }: { navigation: any }) {
                 opacity: animatedOpacity
               }}
               source={{
-                uri: 'https://github.com/ndhuy2308/Anlene-TypeScript/raw/main/assets/images/test-' + step + '.png'
+                uri: imgSource
               }}
             />
             <Image
@@ -206,7 +214,7 @@ function Page2Test({ navigation }: { navigation: any }) {
           </View>
           <Text
             style={[styles.textTop, { textAlign: 'center', paddingTop: 10, paddingLeft: '10%', paddingRight: '10%' }]}
-          ></Text>
+          >{content}</Text>
 
           <View style={{ flex: 2 }}>
             <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', paddingTop: 15 }}>
